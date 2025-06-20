@@ -1,0 +1,36 @@
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+import base64
+
+# Generate keys for demonstration
+dictator_key = RSA.generate(2048)
+dictator_public_key = dictator_key.publickey()
+anamorphic_key = RSA.generate(2048)  # Trusted party's secret key
+
+# Dictator's message (the one you are forced to send)
+dictator_message = b"This is the dictated message."
+
+# Covert message (the real, secret message for the trusted recipient)
+covert_message = b"Secret message for trusted recipient."
+
+# Encrypt dictator's message (as per dictator's rules)
+dictator_cipher = PKCS1_OAEP.new(dictator_public_key)
+dictator_ciphertext = dictator_cipher.encrypt(dictator_message)
+
+# Encrypt covert message (anamorphic encryption for trusted recipient)
+anamorphic_cipher = PKCS1_OAEP.new(anamorphic_key.publickey())
+covert_ciphertext = anamorphic_cipher.encrypt(covert_message)
+
+# Combine both ciphertexts (for demo: concatenate, but in practice, covert message would be hidden more subtly)
+final_ciphertext = base64.b64encode(dictator_ciphertext + b"||" + covert_ciphertext)
+
+# What the dictator sees (just the dictated message)
+print("Dictator decrypts:", dictator_key.decrypt(dictator_ciphertext).decode())
+
+# Decryption by trusted recipient: extract covert message
+decoded = base64.b64decode(final_ciphertext)
+dictator_part, covert_part = decoded.split(b"||")
+trusted_cipher = PKCS1_OAEP.new(anamorphic_key)
+recovered_covert = trusted_cipher.decrypt(covert_part)
+
+print("Covert message recovered by trusted recipient:", recovered_covert.decode())
