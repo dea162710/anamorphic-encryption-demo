@@ -1,0 +1,112 @@
+# Anamorphic Encryption Demo (Simplified Educational Prototype)
+# Covers ideas from Sections 4 (Receiver-AM), 5 (Rejection Sampling + Naor-Yung), and 6 (Sender-AM) from
+# https://eprint.iacr.org/2022/639.pdf
+
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+import base64
+import hashlib
+import random
+
+# -- SECTION 4: RECEIVER-ANAMORPHIC ENCRYPTION --
+print("\n--- Section 4: Receiver-AM ---")
+
+# Generate keys
+dictator_key = RSA.generate(2048)
+dictator_public_key = dictator_key.publickey()
+trusted_key = RSA.generate(2048)
+trusted_public_key = trusted_key.publickey()
+
+# Dictator's required message
+dictator_message = b"This is the dictator's message."
+# Covert secret message
+covert_message = b"This is the secret message."
+
+# Encrypt dictator's message
+dictator_cipher = PKCS1_OAEP.new(dictator_public_key)
+dictator_ciphertext = dictator_cipher.encrypt(dictator_message)
+
+# Encrypt covert message
+trusted_cipher = PKCS1_OAEP.new(trusted_public_key)
+covert_ciphertext = trusted_cipher.encrypt(covert_message)
+
+# Combine messages (naively)
+combined_cipher = base64.b64encode(dictator_ciphertext + b"||" + covert_ciphertext)
+print("Combined Ciphertext (sent):", combined_cipher[:60], b"...")
+
+# Trusted recipient recovers covert message
+decoded = base64.b64decode(combined_cipher)
+_, covert_part = decoded.split(b"||")
+decrypted_covert = PKCS1_OAEP.new(trusted_key).decrypt(covert_part)
+print("Recovered covert message:", decrypted_covert.decode())
+
+
+# -- SECTION 5.1: REJECTION SAMPLING (SIMULATED) --
+print("\n--- Section 5.1: Rejection Sampling (1bit) ---")
+
+def PRF(key, ct):
+    h = hashlib.sha256()
+    h.update((key + ct).encode())
+    return int(h.hexdigest(), 16) % 2
+
+# Rejection sampling simulation
+K = "mysecretkey"
+m0 = "Forced message"
+m1 = 1  # Hidden bit
+tries = 0
+
+while True:
+    candidate_ct = f"ciphertext_{random.randint(100000, 999999)}"
+    if PRF(K, candidate_ct) == m1:
+        break
+    tries += 1
+
+print(f"Selected ciphertext: {candidate_ct} after {tries} trials")
+recovered_bit = PRF(K, candidate_ct)
+print("Recovered hidden bit:", recovered_bit)
+
+
+# -- SECTION 5.2/5.3: NAOR-YUNG (Simulated) --
+print("\n--- Section 5.2: Naor-Yung Receiver-AM (Simulated) ---")
+
+# Keys
+PK0 = RSA.generate(1024).publickey()
+PK1 = RSA.generate(1024).publickey()
+m0 = b"This is m0"
+m1 = b"This is m1"
+
+# Simulate dual encryption and fake proof
+ct0 = base64.b64encode(m0 + b"::pk0")
+ct1 = base64.b64encode(m1 + b"::pk1")
+proof = "simulated_zk_proof"
+
+ciphertext_bundle = (ct0, ct1, proof)
+print("Ciphertext tuple:", ciphertext_bundle)
+
+# Receiver uses PK1's private key (assumed known) to decrypt m1
+# Skipped in this demo (requires extra infra)
+
+
+# -- SECTION 6: SENDER-ANAMORPHIC ENCRYPTION (Simulated) --
+print("\n--- Section 6: Sender-AM with No Shared Key (Simulated) ---")
+
+def fRandom_sim(fPK, m0, dPK, m1):
+    attempts = 0
+    while True:
+        R = str(random.randint(1000, 9999))
+        ct = f"Enc({fPK},{m0},{R})"
+        recovered = f"Dec({dPK},{ct})"  # simulate decryption gives m1 sometimes
+        if random.random() < 0.5:
+            return ct, R
+        attempts += 1
+
+fPK = "PublicKey_Carol"
+dPK = "PublicKey_Bob"
+m0 = "Dictated message"
+m1 = "Hidden message"
+
+ct, R = fRandom_sim(fPK, m0, dPK, m1)
+print(f"Generated ciphertext: {ct} with randomness: {R}")
+print("Receiver Bob recovers m1 (simulated):", m1)
+
+# End of demo.
