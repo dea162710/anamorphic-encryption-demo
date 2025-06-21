@@ -12,7 +12,7 @@ This project is a simplified implementation and demonstration of key concepts fr
 
 This code **simulates** the paper’s constructions in a beginner-friendly way using Python.
 
-> ⚠️ **Disclaimer:** This might not be a complete version but it is the best I could do. I did have to look up some things from videos but nothing from AI. Here are the links that I used besides the main paper: https://pycryptodome.readthedocs.io/en/latest/src/public_key/rsa.html, https://pycryptodome.readthedocs.io/en/latest/src/examples.html#encrypt-data-with-rsa, https://docs.python.org/3/library/base64.html, https://docs.python.org/3/library/hashlib.html, https://crypto.stanford.edu/~dabo/courses/cs255_winter12/, https://www.youtube.com/watch?v=wXB-V_Keiu8, https://link.springer.com/chapter/10.1007/3-540-38424-3_27, https://www.youtube.com/watch?v=GSIDS_lvRv4, https://www.youtube.com/watch?v=Q2aEzeMDHMA, 
+> ⚠️ **Disclaimer:** This might not be a complete version but it is the best I could do. I did have to look up some things from videos and sources. Here are the links that I used besides the main paper: https://pycryptodome.readthedocs.io/en/latest/src/public_key/rsa.html, https://pycryptodome.readthedocs.io/en/latest/src/examples.html#encrypt-data-with-rsa, https://docs.python.org/3/library/base64.html, https://docs.python.org/3/library/hashlib.html, https://crypto.stanford.edu/~dabo/courses/cs255_winter12/, https://www.youtube.com/watch?v=wXB-V_Keiu8, https://link.springer.com/chapter/10.1007/3-540-38424-3_27, https://www.youtube.com/watch?v=GSIDS_lvRv4, https://www.youtube.com/watch?v=Q2aEzeMDHMA, 
 
 ---
 
