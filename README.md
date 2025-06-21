@@ -10,9 +10,9 @@ This project is a simplified implementation and demonstration of key concepts fr
 **"Anamorphic Encryption: Private Communication Against a Dictator"**  
 [https://eprint.iacr.org/2022/639.pdf](https://eprint.iacr.org/2022/639.pdf)
 
-It was created as part of a high school internship project to help understand modern cryptography research. This code **simulates** the paper’s constructions in a beginner-friendly way using Python.
+This code **simulates** the paper’s constructions in a beginner-friendly way using Python.
 
-> ⚠️ **Disclaimer:** This might not be a complete version but it is the best I could do. I did have to look up some things from videos but nothing from AI. 
+> ⚠️ **Disclaimer:** This might not be a complete version but it is the best I could do. I did have to look up some things from videos but nothing from AI. Here are the links that I used besides the main paper: https://pycryptodome.readthedocs.io/en/latest/src/public_key/rsa.html, https://pycryptodome.readthedocs.io/en/latest/src/examples.html#encrypt-data-with-rsa, https://docs.python.org/3/library/base64.html, https://docs.python.org/3/library/hashlib.html, https://crypto.stanford.edu/~dabo/courses/cs255_winter12/, https://www.youtube.com/watch?v=wXB-V_Keiu8
 
 ---
 
@@ -21,8 +21,8 @@ It was created as part of a high school internship project to help understand mo
 This demo shows simplified versions of the constructions in Sections 4, 5, and 6 of the paper:
 
 ### 1. Section 4 – Receiver-Anamorphic Encryption
-- Simulates a user sending a normal message for the dictator
-- Hides a secret message inside it
+- Shows that  a user sending a normal message for the dictator to read 
+- However, it is going to hide  a secret message inside it
 - Uses real RSA keys and encryption from pycryptodome
 
 ### 2. Section 5 – Rejection Sampling & Naor-Yung Transform
@@ -30,7 +30,7 @@ This demo shows simplified versions of the constructions in Sections 4, 5, and 6
 - Naor-Yung : Demonstrates dual encryption + fake zero-knowledge proof (placeholder)
 
 ### 3. Section 6 – Sender-Anamorphic Encryption (Simulated)
-- Shows a sender creating a ciphertext that looks normal to one recipient but secretly decodes to a different message for another
+- Shows a ciphertext that looks normal, but then gives a different one 
 - Randomly tries ciphertexts until one "fits"
 
 ---
